@@ -80,6 +80,7 @@ class Controller:
             msg.exec_()  
         
         
+        
     def show_treino(self): 
         self.treino_Window = QtWidgets.QMainWindow()
         self.treino_ui = treino.Ui_MainWindow()
