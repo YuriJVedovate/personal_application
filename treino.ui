@@ -6,31 +6,35 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>600</height>
+    <width>800</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>600</width>
-    <height>600</height>
+    <width>800</width>
+    <height>800</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>600</width>
-    <height>600</height>
+    <width>800</width>
+    <height>800</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgba(39, 78, 118, 200);
+</string>
+  </property>
   <widget class="QWidget" name="TelaTreinos">
    <widget class="QLabel" name="lblTituloTreinos">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
+      <x>330</x>
+      <y>120</y>
       <width>138</width>
       <height>45</height>
      </rect>
@@ -49,28 +53,15 @@ color: rgb(255, 85, 0);</string>
     <property name="text">
      <string>Treinos</string>
     </property>
-   </widget>
-   <widget class="Line" name="lnLinhaTitulo">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>50</y>
-      <width>551</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(0, 0, 0);</string>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="lblDataAtual">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>100</y>
+      <x>330</x>
+      <y>260</y>
       <width>138</width>
       <height>45</height>
      </rect>
@@ -89,12 +80,15 @@ color: rgb(255, 85, 0);</string>
     <property name="text">
      <string>Hoje</string>
     </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
    </widget>
    <widget class="QPushButton" name="btnComecar">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>140</y>
+      <x>130</x>
+      <y>320</y>
       <width>541</width>
       <height>61</height>
      </rect>
@@ -107,7 +101,11 @@ color: rgb(255, 85, 0);</string>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 85, 0);</string>
+     <string notr="true">background-color: rgb(255, 85, 0);
+
+border-radius: 15px;
+border-style: outset;
+border-width: 2px;</string>
     </property>
     <property name="text">
      <string>Começar</string>
@@ -116,8 +114,8 @@ color: rgb(255, 85, 0);</string>
    <widget class="QLabel" name="lblDiaAnterior">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>250</y>
+      <x>330</x>
+      <y>500</y>
       <width>138</width>
       <height>45</height>
      </rect>
@@ -136,12 +134,15 @@ color: rgb(255, 85, 0);</string>
     <property name="text">
      <string>Anteriores</string>
     </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
    </widget>
    <widget class="QPushButton" name="btnVisualizar">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>290</y>
+      <x>130</x>
+      <y>560</y>
       <width>541</width>
       <height>61</height>
      </rect>
@@ -154,49 +155,47 @@ color: rgb(255, 85, 0);</string>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 85, 0);</string>
+     <string notr="true">background-color: rgb(255, 85, 0);
+
+border-radius: 15px;
+border-style: outset;
+border-width: 2px;</string>
     </property>
     <property name="text">
      <string>Visualizar</string>
     </property>
    </widget>
-   <widget class="QScrollArea" name="scrollArea">
+   <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>426</y>
-      <width>531</width>
-      <height>151</height>
+      <x>10</x>
+      <y>10</y>
+      <width>41</width>
+      <height>41</height>
      </rect>
     </property>
-    <property name="widgetResizable">
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>UserIcon.png</pixmap>
+    </property>
+    <property name="scaledContents">
      <bool>true</bool>
     </property>
-    <widget class="QWidget" name="scrollAreaWidgetContents_3">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>529</width>
-       <height>149</height>
-      </rect>
-     </property>
-    </widget>
    </widget>
-   <widget class="QLabel" name="lbFeedBack">
+   <widget class="QLabel" name="lblNomeUser">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>390</y>
-      <width>121</width>
+      <x>60</x>
+      <y>16</y>
+      <width>271</width>
       <height>31</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <pointsize>20</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
      </font>
     </property>
     <property name="styleSheet">
@@ -204,7 +203,7 @@ color: rgb(255, 85, 0);</string>
 color: rgb(255, 85, 0);</string>
     </property>
     <property name="text">
-     <string>FeedBack</string>
+     <string>User</string>
     </property>
    </widget>
   </widget>
