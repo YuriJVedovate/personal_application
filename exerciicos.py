@@ -1,18 +1,3 @@
-"""
-atributos que meus exercicios vao ter:
-    
-dia = dateTime
-nome = String
-imagem = String
-tempoSegundos = int
-
-
-"""
-
-
-  #Código adaptado para Python 3
-
-#!/usr/bin/python
 
 from datetime import datetime, timedelta
 from sys import stdout

@@ -1,14 +1,12 @@
 #importa bibliotecas
 import sys
-from PyQt5 import QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets
+
 import sqlite3
-import datetime
+
 from datetime import date
+import datetime
 
-
-# from datetime import datetime, timedelta
-# from sys import stdout
-# from time import sleep
 
 
 #arquivos das telas
@@ -21,24 +19,70 @@ import treinoatual
  # cria classe chamada Controller
 class Controller: 
     
-    # configurações para importação de telas 
-    login_Window = QtWidgets.QMainWindow()
-    login_ui = login.Ui_MainWindow()
-    login_ui.setupUi(login_Window)
+    contador = 0
+    contadorplayStop = 0
+    quantidade_Exercicio = 0
+    exercicios = ""
+
+    def __init__(self):
+        # configurações para importação de telas 
+        self.login_Window = QtWidgets.QMainWindow()
+        self.login_ui = login.Ui_MainWindow()
+        self.login_ui.setupUi(self.login_Window)
+        # ao clicar no botão "btnLogin" leva para função verificar_login
+        self.login_ui.btnLogin.clicked.connect(self.verificar_login)
+        # ao clicar no botão "btnCadastrar" leva para função show_cadastrar
+        self.login_ui.btnCadastrar.clicked.connect(self.show_cadastrar)
+        self.login_ui.btnCadastrar.clicked.connect(self.login_Window.close)
+        
     
-    cadastro_Window = QtWidgets.QMainWindow()
-    cadastro_ui = cadastro.Ui_MainWindow()
-    cadastro_ui.setupUi(cadastro_Window)
+        self.cadastro_Window = QtWidgets.QMainWindow()
+        self.cadastro_ui = cadastro.Ui_MainWindow()
+        self.cadastro_ui.setupUi(self.cadastro_Window)
+        self.cadastro_ui.btnCadastrar.clicked.connect(self.cadastrar)
+        self.cadastro_ui.btnVoltar.clicked.connect(self.show_login)
+        self.cadastro_ui.btnVoltar.clicked.connect(self.cadastro_Window.close)
+        
     
-    treino_Window = QtWidgets.QMainWindow()
-    treino_ui = treino.Ui_MainWindow()
-    treino_ui.setupUi(treino_Window)
+        self.treino_Window = QtWidgets.QMainWindow()
+        self.treino_ui = treino.Ui_MainWindow()
+        self.treino_ui.setupUi(self.treino_Window)
+        self.treino_ui.btnComecar.clicked.connect(self.show_treinoAtual)
+        self.treino_ui.btnComecar.clicked.connect(self.treino_Window.close)
+        self.treino_ui.btnLogout.clicked.connect(self.Logout)
+        self.treino_ui.btnLogout.clicked.connect(self.treino_Window.close)
+        
     
-    treinoatual_Window = QtWidgets.QMainWindow()
-    treinoatual_ui = treinoatual.Ui_MainWindow()
-    treinoatual_ui.setupUi(treinoatual_Window)
+        self.treinoatual_Window = QtWidgets.QMainWindow()
+        self.treinoatual_ui = treinoatual.Ui_MainWindow()
+        self.treinoatual_ui.setupUi(self.treinoatual_Window)
+        self.treinoatual_ui.pushButton.clicked.connect(self.show_treino)
+        self.treinoatual_ui.pushButton.clicked.connect(self.treinoatual_Window.close)
+        self.treinoatual_ui.btnProximo.clicked.connect(self.ProxExercicio)
+        self.treinoatual_ui.pushButton_2.clicked.connect(self.VoltaExercicio)
+        self.treinoatual_ui.btnPause.clicked.connect(self.playStop)
+        self.treinoatual_ui.btnLogout.clicked.connect(self.Logout)
+        self.treinoatual_ui.btnLogout.clicked.connect(self.treinoatual_Window.close)
+        
+        
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.showTime)
     
     
+    
+    def Logout(self):
+        self.login_ui.leNomeLogin.setText("")
+        self.login_ui.leSenhaLogin.setText("")
+        self.login_ui.lblErroLogin.setText("")
+        
+        self.contador = 0
+        self.contadorplayStop = 0
+        self.quantidade_Exercicio = 0
+        self.exercicios = ""
+        
+        self.show_login()
+        
+        
     
     
     """
@@ -50,15 +94,8 @@ class Controller:
     """
     
     def show_login(self):
-        # mostra tela login
         self.login_Window.show()
-        # ao clicar no botão "btnLogin" leva para função verificar_login
-        self.login_ui.btnLogin.clicked.connect(self.verificar_login)
-        # ao clicar no botão "btnCadastrar" leva para função show_cadastrar
-        self.login_ui.btnCadastrar.clicked.connect(self.show_cadastrar)
-        self.login_ui.btnCadastrar.clicked.connect(self.login_Window.close)
-         
-    
+        
     """
     função verificar_login:
         adiciona a variavel nomeLogin o valor digitado na LineEdit
@@ -83,31 +120,33 @@ class Controller:
     """
         
     def verificar_login(self):
-        # adiciona a variavel nomeLogin o valor digitado na LineEdit
         nomeLogin = self.login_ui.leNomeLogin.text()
-        # adiciona a variavel senhaLogin o valor digitado na LineEdit
         senhaLogin = self.login_ui.leSenhaLogin.text()
-        
         
         banco = sqlite3.connect('Banco.db')
         cursor = banco.cursor()
         
-        try:
-            cursor.execute("SELECT senha FROM Usuario WHERE nome = '{}'".format(nomeLogin))
-            senha_bd = cursor.fetchall()
-            banco.close() 
-        except:
-            print("Erro para encontrar login")
+        cursor.execute("SELECT senha FROM Usuario WHERE nome = '{}'".format(nomeLogin))
+        senha_bd = cursor.fetchall()
+        banco.close() 
+       
+        if senha_bd != []:
+            if senhaLogin == senha_bd[0][0]:
+                self.login_ui.leNomeLogin.setText("")
+                self.login_ui.leSenhaLogin.setText("")
+                
+                self.login_Window.close()
+                self.show_treino()
             
+                self.treino_ui.lblNomeUser.setText(nomeLogin)
             
-        if senhaLogin == senha_bd[0][0]:
-            self.login_Window.close()
-            self.show_treino()
-            
-            self.treino_ui.lblNomeUser.setText(nomeLogin)
-            
+            else:
+                self.login_ui.lblErroLogin.setText("login ou senha incorreto")
+                
         else:
-            self.login_ui.lblErroLogin.setText("login ou senha incorreto")
+            self.login_ui.lblErroLogin.setText("login não existe")
+            
+        
         
             
         
@@ -120,10 +159,6 @@ class Controller:
         
     def show_cadastrar(self):
         self.cadastro_Window.show()
-        
-        self.cadastro_ui.btnCadastrar.clicked.connect(self.cadastrar)
-        self.cadastro_ui.btnVoltar.clicked.connect(self.show_login)
-        self.cadastro_ui.btnVoltar.clicked.connect(self.cadastro_Window.close)
         
     
     """
@@ -157,22 +192,26 @@ class Controller:
         senha = self.cadastro_ui.leSenhaCadastro.text()
         c_senha = self.cadastro_ui.leConfirmarSenhaCadastro.text()
         
-        if(senha == c_senha):
+        
+        if( (nome.strip() and len(nome) >= 5) and (email.strip() and len(email) >= 10) and (senha.strip() and len(senha) >= 8 ) and senha == c_senha):
             try:
                 banco = sqlite3.connect('Banco.db')
                 cursor = banco.cursor()
-                cursor.execute("INSERT INTO Usuario VALUES ('"+nome+"','"+email+"','"+senha+"')")
+                cursor.execute("INSERT INTO usuario VALUES (null,'{}', '{}', '{}')".format(nome, email, senha))
                 
                 banco.commit()
                 banco.close()
                 self.cadastro_ui.lblErroCadastro.setText("Usuario cadastrado com sucesso")
+                self.cadastro_ui.lblErroCadastro.setText("")
+                
                 self.login_Window.show()
                 self.cadastro_Window.close()
                 
             except sqlite3.Error as erro:
                 print("Erro ao inserir os dados: ", erro)
+                
         else:
-            self.cadastro_ui.lblErroCadastro.setText("As senhas digitadas estão diferentes")
+            self.cadastro_ui.lblErroCadastro.setText("Campos Invalidos")
             self.cadastro_ui.leNomeCadastro.setText("")
             self.cadastro_ui.leEmailCadastro.setText("")
             self.cadastro_ui.leSenhaCadastro.setText("")
@@ -196,8 +235,6 @@ class Controller:
         self.treino_ui.lblDataAtual.setText(date_now.strftime("%d/%m/%y"))
         self.treino_ui.lblDiaAnterior.setText(yesterday.strftime("%d/%m/%y"))
         
-        self.treino_ui.btnComecar.clicked.connect(self.show_treinoAtual)
-        self.treino_ui.btnComecar.clicked.connect(self.treino_Window.close)
         
     
     """
@@ -213,24 +250,125 @@ class Controller:
     def show_treinoAtual(self):
         self.treinoatual_Window.show()
         
-        self.treinoatual_ui.pushButton.clicked.connect(self.show_treino)
-        self.treinoatual_ui.pushButton.clicked.connect(self.treinoatual_Window.close)
-        
-        
         data_atual = date.today()
-        data_em_texto = data_atual.strftime('%d/%m/%Y')
-        self.treinoatual_ui.lbTituloTreinoAtual.setText(str(data_em_texto))
+        data_em_texto = str(data_atual.strftime('%d/%m/%Y'))
+        self.treinoatual_ui.lbTituloTreinoAtual.setText(data_em_texto)
         
-        # segundos = 120 
+        banco = sqlite3.connect('Banco.db')
+        cursor = banco.cursor()
         
-        # tempo = timedelta(seconds=segundos)
+        cursor.execute("select count(IdEx) from exercicio")
+        self.quantidade_Exercicio = cursor.fetchall()
         
-        # while (str(tempo) != '0:00:00'):
-        #     self.treinoatual_ui.timeEdit.setTime("\r%s"%tempo)
-        #     stdout.flush()
-        #     tempo = tempo - timedelta(seconds=1)
-        #     sleep(1)
+        self.treinoatual_ui.lbQuantEx.setText(str(self.quantidade_Exercicio[0][0]))
+        
+        cursor.execute("select * from exercicio")
+        self.exercicios = cursor.fetchall()
+        
+        self.treinoatual_ui.lbExAtual.setText(str(self.exercicios[self.contador][4]))
+        self.treinoatual_ui.lbNomeExe.setText(str(self.exercicios[self.contador][2]))
+        
+        self.treinoatual_ui.label.setPixmap(QtGui.QPixmap( str(self.exercicios[self.contador][3])))
+        self.treinoatual_ui.label.setScaledContents(True)
+        
+        self.segundos = self.exercicios[self.contador][5]
+    
+        self.treinoatual_ui.lblCronometro.setText("00:00:" + str(self.segundos))
+        
+        
+        
+        
+        if (self.contador == 0 ):
+            self.treinoatual_ui.pushButton_2.setStyleSheet("background-color: rgb(86, 116, 148);\n"
+                                                           "border-radius: 15px;\n"
+                                                           "border-style: outset;\n"
+                                                           "border-width: 2px;")
+        else:
+            self.treinoatual_ui.pushButton_2.setStyleSheet("background-color: rgb(255, 85, 0);\n"
+                                                           "border-radius: 15px;\n"
+                                                           "border-style: outset;\n"
+                                                           "border-width: 2px;")
+        
+        
+        if ((self.contador + 1) == self.quantidade_Exercicio[0][0]):
+            self.treinoatual_ui.btnProximo.setStyleSheet("background-color: rgb(86, 116, 148);\n"
+                                                         "border-radius: 15px;\n"
+                                                         "border-style: outset;\n"
+                                                         "border-width: 2px;")
             
+        else:
+            self.treinoatual_ui.btnProximo.setStyleSheet("background-color: rgb(255, 85, 0);\n"
+                                                         "border-radius: 15px;\n"
+                                                         "border-style: outset;\n"
+                                                         "border-width: 2px;")
+        
+        
+            
+        
+        
+        
+    def ProxExercicio(self):
+        
+        if ((self.contador + 1) == self.quantidade_Exercicio[0][0]):
+            pass
+        
+        else:
+            self.contador += 1
+            self.timer.stop()
+            self.treinoatual_ui.btnPause.setStyleSheet("background-color: rgb(255, 85, 0);\n"
+                                                         "border-radius: 15px;\n"
+                                                         "border-style: outset;\n"
+                                                         "border-width: 2px;")  
+            
+        self.show_treinoAtual()
+    
+    def VoltaExercicio(self):
+        
+        if (self.contador == 0 ):
+            pass
+            
+        else:
+            self.contador -= 1
+            self.timer.stop()
+            self.treinoatual_ui.btnPause.setStyleSheet("background-color: rgb(255, 85, 0);\n"
+                                                         "border-radius: 15px;\n"
+                                                         "border-style: outset;\n"
+                                                         "border-width: 2px;")            
+            
+        self.show_treinoAtual()
+        
+        
+        
+    def playStop(self):
+        
+        self.contadorplayStop += 1
+        if (self.contadorplayStop % 2 == 1):
+            self.treinoatual_ui.btnPause.setStyleSheet("background-color: rgb(86, 116, 148);\n"
+                                                         "border-radius: 15px;\n"
+                                                         "border-style: outset;\n"
+                                                         "border-width: 2px;")
+            self.timer.start(1000)
+        else:
+            self.treinoatual_ui.btnPause.setStyleSheet("background-color: rgb(255, 85, 0);\n"
+                                                         "border-radius: 15px;\n"
+                                                         "border-style: outset;\n"
+                                                         "border-width: 2px;")
+            self.timer.stop()
+        
+        
+    def showTime(self):
+        hora = self.segundos // 3600
+        minuto = (self.segundos % 3600) // 60
+        segundo = (self.segundos % 3600) % 60
+        
+        timeDisplay = "%02i:%02i:%02i"%(hora,minuto,segundo)
+        self.treinoatual_ui.lblCronometro.setText(timeDisplay)
+        self.segundos = self.segundos - 1
+        
+        if self.segundos < 0:
+            self.timer.stop()
+            print("\a")
+        
         
         
 if __name__ == '__main__':

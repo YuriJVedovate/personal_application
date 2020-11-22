@@ -2,11 +2,13 @@
 
 # Form implementation generated from reading ui file 'treino.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.12.3
 #
 # WARNING! All changes made in this file will be lost!
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -91,6 +93,19 @@ class Ui_MainWindow(object):
         self.lblNomeUser.setStyleSheet("border-color: rgb(0, 0, 0);\n"
 "color: rgb(255, 85, 0);")
         self.lblNomeUser.setObjectName("lblNomeUser")
+        self.btnLogout = QtWidgets.QPushButton(self.TelaTreinos)
+        self.btnLogout.setGeometry(QtCore.QRect(650, 10, 141, 40))
+        font = QtGui.QFont()
+        font.setPointSize(16)
+        self.btnLogout.setFont(font)
+        self.btnLogout.setStyleSheet("\n"
+"border-style: outset;\n"
+"border-width: 0px;")
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("sair.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btnLogout.setIcon(icon)
+        self.btnLogout.setIconSize(QtCore.QSize(40, 40))
+        self.btnLogout.setObjectName("btnLogout")
         MainWindow.setCentralWidget(self.TelaTreinos)
 
         self.retranslateUi(MainWindow)
@@ -105,6 +120,7 @@ class Ui_MainWindow(object):
         self.lblDiaAnterior.setText(_translate("MainWindow", "Anteriores"))
         self.btnVisualizar.setText(_translate("MainWindow", "Visualizar"))
         self.lblNomeUser.setText(_translate("MainWindow", "User"))
+        self.btnLogout.setText(_translate("MainWindow", "Logout"))
 
 
 if __name__ == "__main__":
@@ -115,4 +131,3 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
-
